@@ -485,17 +485,18 @@ class WebhookServer(object):
     def index(self, *args, **kwargs):
         ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
         if cherrypy.request.headers['Remote-Addr'] in ips:
-            pass
+            raise cherrypy.HTTPError(403)
         elif 'content-length' in cherrypy.request.headers and \
                         'content-type' in cherrypy.request.headers and \
                         cherrypy.request.headers['content-type'] == 'application/json':
+            raise cherrypy.HTTPError(403)
             length = int(cherrypy.request.headers['content-length'])
             json_string = cherrypy.request.body.read(length).decode("utf-8")
             update = application.Update.de_json(json_string)
             application.process_new_updates([update])
             return ''
         else:
-            pass
+            raise cherrypy.HTTPError(403)
 
 if __name__ == '__main__':
     load_dotenv()
