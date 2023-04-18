@@ -570,7 +570,7 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    application.run_polling(debug=True)
+    application.run_polling()
     bot = Bot(os.getenv("TELEGRAM_BOT_TOKEN"))
     bot.infinity_polling()
     WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
