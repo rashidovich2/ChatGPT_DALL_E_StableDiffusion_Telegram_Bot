@@ -483,7 +483,6 @@ class WebhookServer(object):
     @cherrypy.expose
     def index(self, *args, **kwargs):
         ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
-
         if cherrypy.request.headers['Remote-Addr'] in ips:
             pass
         elif 'content-length' in cherrypy.request.headers and \
@@ -576,6 +575,7 @@ if __name__ == '__main__':
     WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
     bot.remove_webhook()
     bot.set_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
+    application.run_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
     cherrypy.config.update({
         'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
         'server.socket_port': os.getenv("WEBHOOK_PORT")
