@@ -7,7 +7,7 @@ from chatgpt import Chatgpt
 from stablediffusion import StableDiffusion
 from dalle import DallE
 from dotenv import load_dotenv
-
+import cherrypy
 from aiocryptopay import AioCryptoPay, Networks
 
 from telegram import (
@@ -477,7 +477,25 @@ async def keyboard_callback(update: Update, context: ContextTypes):
                 await query.answer("❎Payment has expired, create a new payment")
         else:
             await query.answer("❎Payment has expired, create a new payment")
-            
+
+class WebhookServer(object):
+    @cherrypy.expose
+    def index(self, *args, **kwargs):
+        ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
+
+        if cherrypy.request.headers['Remote-Addr'] in ips:
+            pass
+        elif 'content-length' in cherrypy.request.headers and \
+                        'content-type' in cherrypy.request.headers and \
+                        cherrypy.request.headers['content-type'] == 'application/json':
+            length = int(cherrypy.request.headers['content-length'])
+            json_string = cherrypy.request.body.read(length).decode("utf-8")
+            update = application.Update.de_json(json_string)
+            application.process_new_updates([update])
+            return ''
+        else:
+            raise cherrypy.HTTPError(403)
+
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
@@ -553,4 +571,11 @@ if __name__ == '__main__':
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
-    application.run_webhook(webhook_url=os.getenv("WEBHOOK_URL"))
+    WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
+    application.run_webhook(webhook_url=WEBHOOK_URL_BASE+os.getenv("WEBHOOK_URL_PATH"))
+    cherrypy.config.update({
+        'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
+        'server.socket_port': os.getenv("WEBHOOK_PORT"),
+        'server.ssl_module': 'builtin'
+    })
+    cherrypy.quickstart(WebhookServer(), os.getenv("WEBHOOK_URL_PATH"), {'/': {}})
