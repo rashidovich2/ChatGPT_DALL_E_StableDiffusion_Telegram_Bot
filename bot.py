@@ -553,5 +553,5 @@ if __name__ == '__main__':
     
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    application.run_webhook(listen='https://feocjzl5.up.railway.app/',port=88,url_path='freekassa')
+    application.run_webhook(webhook_url=os.getenv("WEBHOOK_URL"))
     application.run_polling()
