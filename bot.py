@@ -493,10 +493,8 @@ class WebhookServer(object):
             json_string = cherrypy.request.body.read(length).decode("utf-8")
             update = application.Update.de_json(json_string)
             application.process_new_updates([update])
-            print(cherrypy.request)
             return ''
         else:
-            print(cherrypy.request)
             raise cherrypy.HTTPError(403)
 
 if __name__ == '__main__':
@@ -574,15 +572,15 @@ if __name__ == '__main__':
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
     bot = Bot(os.getenv("TELEGRAM_BOT_TOKEN"))
-    bot.debug = True
     WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
     WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
     bot.remove_webhook()
     time.sleep(5)
     bot.set_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
-    cherrypy.debug = True
+    time.sleep(5)
     cherrypy.config.update({
         'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
         'server.socket_port': os.getenv("WEBHOOK_PORT"),
     })
+    time.sleep(5)
     cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
