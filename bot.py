@@ -493,8 +493,10 @@ class WebhookServer(object):
             json_string = cherrypy.request.body.read(length).decode("utf-8")
             update = application.Update.de_json(json_string)
             application.process_new_updates([update])
+            print(cherrypy.request)
             return ''
         else:
+            print(cherrypy.request)
             raise cherrypy.HTTPError(403)
 
 if __name__ == '__main__':
