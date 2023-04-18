@@ -584,4 +584,4 @@ if __name__ == '__main__':
         'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
         'server.socket_port': os.getenv("WEBHOOK_PORT"),
     })
-    cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
+    cherrypy.server.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
