@@ -495,7 +495,7 @@ class WebhookServer(object):
             application.process_new_updates([update])
             return ''
         else:
-            raise cherrypy.HTTPError(403)
+            pass
 
 if __name__ == '__main__':
     load_dotenv()
@@ -568,10 +568,10 @@ if __name__ == '__main__':
         },
         fallbacks=[],
     )
-    bot = Bot(os.getenv("TELEGRAM_BOT_TOKEN"))
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
+    bot = Bot(os.getenv("TELEGRAM_BOT_TOKEN"))
     WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
     WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
     bot.remove_webhook()
