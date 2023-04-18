@@ -15,7 +15,6 @@ from telegram import (
     InlineKeyboardButton,
     ReplyKeyboardMarkup,
     Update,
-    WebhookInfo,
     KeyboardButton,
 )
 from telegram.ext import (
