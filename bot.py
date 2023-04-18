@@ -11,6 +11,7 @@ import cherrypy
 from aiocryptopay import AioCryptoPay, Networks
 
 from telegram import (
+    Bot,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     ReplyKeyboardMarkup,
@@ -567,12 +568,13 @@ if __name__ == '__main__':
         },
         fallbacks=[],
     )
-    
+    bot = Bot(os.getenv("TELEGRAM_BOT_TOKEN"))
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
     WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
-    application.run_webhook(webhook_url=WEBHOOK_URL_BASE+os.getenv("WEBHOOK_URL_PATH"))
+    bot.remove_webhook()
+    bot.set_webhook(url=WEBHOOK_URL_BASE+os.getenv("WEBHOOK_URL_PATH"))
     cherrypy.config.update({
         'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
         'server.socket_port': os.getenv("WEBHOOK_PORT"),
