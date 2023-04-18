@@ -573,10 +573,11 @@ if __name__ == '__main__':
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
     WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
+    WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
     bot.remove_webhook()
-    bot.set_webhook(url=WEBHOOK_URL_BASE+os.getenv("TELEGRAM_BOT_TOKEN"))
+    bot.set_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
     cherrypy.config.update({
         'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
         'server.socket_port': os.getenv("WEBHOOK_PORT")
     })
-    cherrypy.quickstart(WebhookServer(), os.getenv("TELEGRAM_BOT_TOKEN"), {'/': {}})
+    cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
