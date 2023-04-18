@@ -485,7 +485,7 @@ class WebhookServer(object):
     def index(self, *args, **kwargs):
         ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
         if cherrypy.request.headers['Remote-Addr'] in ips:
-            pass
+            print(cherrypy.request)
         elif 'content-length' in cherrypy.request.headers and \
                         'content-type' in cherrypy.request.headers and \
                         cherrypy.request.headers['content-type'] == 'application/json':
@@ -577,7 +577,12 @@ if __name__ == '__main__':
     bot.remove_webhook()
     time.sleep(5)
     bot.set_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
-    application.run_webhook(webhook_url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
+    application.run_webhook(
+        listen=os.getenv("WEBHOOK_LISTEN"),
+        port=os.getenv("WEBHOOK_PORT"),
+        secret_token=os.getenv("TELEGRAM_BOT_TOKEN"),
+        webhook_url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH
+    )
     cherrypy.config.update({
         'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
         'server.socket_port': os.getenv("WEBHOOK_PORT"),
