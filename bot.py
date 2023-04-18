@@ -3,6 +3,7 @@ import deep_translator
 from deep_translator import GoogleTranslator
   
 import os
+import asyncio
 
 import psycopg2
 from chatgpt import Chatgpt
