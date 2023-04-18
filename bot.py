@@ -1,10 +1,6 @@
-import requests
-import deep_translator
 from deep_translator import GoogleTranslator
   
 import os
-
-import asyncio
 
 import psycopg2
 from chatgpt import Chatgpt
@@ -19,7 +15,7 @@ from telegram import (
     InlineKeyboardButton,
     ReplyKeyboardMarkup,
     Update,
-    Message,
+    WebhookInfo,
     KeyboardButton,
 )
 from telegram.ext import (
@@ -557,4 +553,5 @@ if __name__ == '__main__':
     
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
+    application.run_webhook(url = 'https://feocjzl5.up.railway.app/933dd1ff3c7f39dde6f7f41014dbc976')
     application.run_polling()
