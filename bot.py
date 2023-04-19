@@ -483,10 +483,7 @@ async def main():
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
     db_object = db_connection.cursor()
     context_types = ContextTypes()
-    application = (
-        Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).updater(None).context_types(context_types).build()
-    )
-    #application = Application.builder().token().read_timeout(100).get_updates_read_timeout(100).build()
+    application = Application.builder().token().read_timeout(100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start),MessageHandler(filters.Regex('^🔙Back$'), start)],
@@ -557,8 +554,9 @@ async def main():
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     await application.bot.set_webhook(url=os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH"))
     PORT=int(os.environ.get('PORT', '8443'))
-    await application.start()
-    app.run(host='0.0.0.0', port=PORT, debug=True)
+    async with application:
+        await application.start()
+        await app.run(host='0.0.0.0', port=PORT, debug=True)
 
 if __name__ == '__main__':
     asyncio.run(main())
