@@ -26,6 +26,9 @@ from telegram.ext import (
     CallbackQueryHandler
     )
 
+from telegram.utils.request import Request
+from telegram.utils.webhookhandler import WebhookHandler
+
 (ENTRY_STATE, CHATGPT_STATE,
 DALL_E_STATE, STABLE_STATE, 
 INFO_STATE, PURCHASE_STATE, 
@@ -477,7 +480,7 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-def handle(request):
+def webhook(request: Request):
     if request.method == "POST":
         json_data = request.get_json()
         update = Update.de_json(json_data, bot)
@@ -557,6 +560,7 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
+    application.add_handler(WebhookHandler(webhook))
     PORT=int(os.environ.get('PORT', '8443'))
     application.run_webhook(
         listen="0.0.0.0",
