@@ -552,7 +552,7 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    application.add_handler(MessageHandler(filters.text, webhook))
+    application.add_handler(MessageHandler(filters.TEXT, webhook))
     PORT=int(os.environ.get('PORT', '8443'))
     application.run_webhook(
         listen="0.0.0.0",
