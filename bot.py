@@ -482,6 +482,7 @@ async def main():
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
     db_object = db_connection.cursor()
+    context_types = ContextTypes(context=CustomContext)
     application = (
         Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).updater(None).context_types(context_types).build()
     )
