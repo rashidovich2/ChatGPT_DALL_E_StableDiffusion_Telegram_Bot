@@ -481,11 +481,8 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 
 @app.route('/'+os.getenv("URL_PATH"))
 def webhook():
-    if request.method == 'POST':
-        print("Data received from Webhook is: ", request.json)
-        return "Webhook received!"
-    else:
-        return "Webhook received!"
+    print("Data received from Webhook is: ", request.json)
+    return "Webhook received!"
 
 async def main():
     load_dotenv()
