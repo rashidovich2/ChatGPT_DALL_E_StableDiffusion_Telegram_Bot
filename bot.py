@@ -9,6 +9,7 @@ from dalle import DallE
 from dotenv import load_dotenv
 from aiocryptopay import AioCryptoPay, Networks
 from flask import Flask, request, abort
+from threading import Thread
 app = Flask(__name__)
 
 from telegram import (
@@ -479,24 +480,30 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
+class FlaskThread(Thread):
+    def run(self) -> None:
+        PORT = int(os.environ.get('PORT', '8443'))
+        app.run(host='0.0.0.0', port=PORT, debug=True)
+
 @app.route('/'+os.getenv("URL_PATH"))
 def webhook():
     if request.method == 'GET':
         return "Webhook received!"
     elif request.method == 'POST':
-        print("Data received from Webhook is: ", request.json)
+        data = request.form
     else:
         abort(405)
 
-async def main():
+if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
     db_object = db_connection.cursor()
     context_types = ContextTypes()
-    application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).read_timeout(100).get_updates_read_timeout(100).build()
+    application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).read_timeout(
+        100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start),MessageHandler(filters.Regex('^🔙Back$'), start)],
+        entry_points=[CommandHandler('start', start), MessageHandler(filters.Regex('^🔙Back$'), start)],
         states={
             ENTRY_STATE: [
                 CommandHandler('start', start),
@@ -562,12 +569,6 @@ async def main():
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    await application.bot.set_webhook(url=os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH"))
-    PORT=int(os.environ.get('PORT', '8443'))
-    async with application:
-        await application.start()
-        await app.run(host='0.0.0.0', port=PORT, debug=True)
-        await application.stop()
-
-if __name__ == '__main__':
-    asyncio.run(main())
+    flask_thread = FlaskThread()
+    flask_thread.start()
+    application.run_polling()
