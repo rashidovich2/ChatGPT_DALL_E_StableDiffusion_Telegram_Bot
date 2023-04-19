@@ -597,6 +597,7 @@ if __name__ == '__main__':
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
+    time.sleep(5)
     app.threading = True
     app.run(host=os.getenv("WEBHOOK_HOST"))
     # WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
