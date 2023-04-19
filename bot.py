@@ -486,6 +486,7 @@ def runFlask():
             return "Webhook received!"
         elif request.method == 'POST':
             data = request.form
+            return "Webhook received!"
         else:
             abort(405)
     PORT = int(os.environ.get('PORT', '8443'))
