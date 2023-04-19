@@ -566,6 +566,7 @@ async def main():
     async with application:
         await application.start()
         await app.run(host='0.0.0.0', port=PORT, debug=True)
+        await application.stop()
 
 if __name__ == '__main__':
     asyncio.run(main())
