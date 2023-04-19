@@ -553,7 +553,7 @@ async def main():
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     await application.bot.set_webhook(url=os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH"))
     PORT=int(os.environ.get('PORT', '8443'))
-    await application.start())
+    await application.start()
     app.run(host='0.0.0.0', port=PORT, debug=True)
 
 if __name__ == '__main__':
