@@ -7,3 +7,4 @@ stability-sdk==0.3.1
 psycopg2==2.9.6
 aiocryptopay==0.2.6
 tornado==6.3
+Flask==2.2.3
