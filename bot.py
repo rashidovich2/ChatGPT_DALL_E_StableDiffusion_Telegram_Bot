@@ -1,6 +1,7 @@
 from deep_translator import GoogleTranslator
   
 import os
+import asyncio
 import psycopg2
 from chatgpt import Chatgpt
 from stablediffusion import StableDiffusion
@@ -551,7 +552,7 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    application.bot.set_webhook(url=os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH"))
+    asyncio.run(application.bot.set_webhook(url=os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")))
     PORT=int(os.environ.get('PORT', '8443'))
     #application.run_webhook(
     #    listen="0.0.0.0",
@@ -559,5 +560,5 @@ if __name__ == '__main__':
     #    url_path=os.getenv("URL_PATH"),
     #    webhook_url = os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")
     #)
-    application.start()
+    asyncio.run(application.start())
     app.run(host='0.0.0.0', port=8443, debug=True)
