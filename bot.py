@@ -1,7 +1,7 @@
 from deep_translator import GoogleTranslator
   
 import os
-import flask
+from flask import Flask, request, abort
 import time
 import psycopg2
 from chatgpt import Chatgpt
@@ -498,14 +498,17 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 #         else:
 #             print(cherrypy.request)
 #             raise cherrypy.HTTPError(403)
-app = flask.Flask(__name__)
-@app.route('/freekassa/', methods=['POST', 'GET'])
+app = Flask(__name__)
+@app.route('/webhook', methods=['POST', 'GET'])
 def process_request():
     fk_ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
-    if flask.request.access_route[0] not in fk_ips:
-        flask.abort(403)
+    if request.access_route[0] not in fk_ips:
+        print("Data received from Webhook is: ", request.json)
+        abort(403)
     else:
-        print('5000')
+        if request.method == 'POST':
+            print("Data received from Webhook is: ", request.json)
+            return "Webhook received!"
     # user_id = db.get_user_by_pay_sign(flask.request.values['SIGN'])
     # if user_id is None:
     #     flask.abort(422)
@@ -599,7 +602,7 @@ if __name__ == '__main__':
     application.run_polling()
     time.sleep(5)
     app.threading = True
-    app.run(host=os.getenv("WEBHOOK_HOST"))
+    app.run(host=os.getenv("WEBHOOK_HOST"), port=443)
     # WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
     # WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
     # application.run_webhook(webhook_url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
