@@ -8,7 +8,7 @@ from stablediffusion import StableDiffusion
 from dalle import DallE
 from dotenv import load_dotenv
 from aiocryptopay import AioCryptoPay, Networks
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
 
 from telegram import (
@@ -478,6 +478,15 @@ async def keyboard_callback(update: Update, context: ContextTypes):
                 await query.answer("❎Payment has expired, create a new payment")
         else:
             await query.answer("❎Payment has expired, create a new payment")
+
+@app.route('/'+os.getenv("URL_PATH"))
+def webhook():
+    if request.method == 'POST':
+        print("Data received from Webhook is: ", request.json)
+        return "Webhook received!"
+    else:
+        return "Webhook received!"
+
 async def main():
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
