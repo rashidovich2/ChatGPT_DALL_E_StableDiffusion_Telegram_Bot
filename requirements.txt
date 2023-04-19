@@ -10,4 +10,3 @@ aiocryptopay==0.2.6
 tornado==6.3
 CherryPy==18.8.0
 Flask==2.2.3
-waitress==2.1.2
