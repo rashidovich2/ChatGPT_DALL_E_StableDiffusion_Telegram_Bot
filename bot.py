@@ -481,18 +481,17 @@ async def keyboard_callback(update: Update, context: ContextTypes):
             await query.answer("❎Payment has expired, create a new payment")
 
 class FlaskThread(Thread):
+    @app.route('/' + os.getenv("URL_PATH"))
+    def webhook(self):
+        if request.method == 'GET':
+            return "Webhook received!"
+        elif request.method == 'POST':
+            data = request.form
+        else:
+            abort(405)
     def run(self) -> None:
         PORT = int(os.environ.get('PORT', '8443'))
         app.run(host='0.0.0.0', port=PORT, debug=True)
-
-@app.route('/'+os.getenv("URL_PATH"))
-def webhook():
-    if request.method == 'GET':
-        return "Webhook received!"
-    elif request.method == 'POST':
-        data = request.form
-    else:
-        abort(405)
 
 if __name__ == '__main__':
     load_dotenv()
