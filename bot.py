@@ -489,7 +489,7 @@ def runFlask():
         else:
             abort(405)
     PORT = int(os.environ.get('PORT', '8443'))
-    app.run(host='0.0.0.0', port=PORT, debug=True)
+    app.run(host='0.0.0.0', port=PORT)
 
 
 if __name__ == '__main__':
