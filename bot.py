@@ -553,6 +553,6 @@ if __name__ == '__main__':
     application.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        url_path=os.getenv("TELEGRAM_BOT_TOKEN"),
-        webhook_url = os.getenv("WEBHOOK_URL")+os.getenv("TELEGRAM_BOT_TOKEN")
+        url_path=os.getenv("URL_PATH"),
+        webhook_url = os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")
     )
