@@ -1,7 +1,7 @@
 from deep_translator import GoogleTranslator
   
 import os
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template
 app = Flask(__name__)
 import time
 import psycopg2
@@ -480,27 +480,10 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-# class WebhookServer(object):
-#     @cherrypy.expose
-#     def index(self, *args, **kwargs):
-#         ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
-#         if cherrypy.request.headers['Remote-Addr'] in ips:
-#             print(cherrypy.request)
-#         elif 'content-length' in cherrypy.request.headers and \
-#                         'content-type' in cherrypy.request.headers and \
-#                         cherrypy.request.headers['content-type'] == 'application/json':
-#             length = int(cherrypy.request.headers['content-length'])
-#             json_string = cherrypy.request.body.read(length).decode("utf-8")
-#             update = application.Update.de_json(json_string)
-#             application.process_new_updates([update])
-#             print(cherrypy.request)
-#             return ''
-#         else:
-#             print(cherrypy.request)
-#             raise cherrypy.HTTPError(403)
 @app.route('/')
 def index():
-  return "Webhook received!"
+    return render_template('index.html')
+
 
 if __name__ == '__main__':
     load_dotenv()
@@ -508,7 +491,7 @@ if __name__ == '__main__':
     db_object = db_connection.cursor()
     application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).read_timeout(100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
-    app.run(debug=True, host = '0.0.0.0',port=os.getenv("WEBHOOK_PORT"))
+    app.run(debug=True, port=os.getenv("WEBHOOK_PORT"))
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start),MessageHandler(filters.Regex('^🔙Back$'), start)],
         states={
