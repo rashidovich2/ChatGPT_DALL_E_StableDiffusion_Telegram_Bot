@@ -1,6 +1,7 @@
 from deep_translator import GoogleTranslator
   
 import os
+import json
 import psycopg2
 from chatgpt import Chatgpt
 from stablediffusion import StableDiffusion
@@ -475,6 +476,13 @@ async def keyboard_callback(update: Update, context: ContextTypes):
                 await query.answer("❎Payment has expired, create a new payment")
         else:
             await query.answer("❎Payment has expired, create a new payment")
+
+def handle(request):
+    if request.method == "POST":
+        json_data = request.get_json()
+        update = Update.de_json(json_data, bot)
+        application.process_update(update)
+    return 'ok'
 
 if __name__ == '__main__':
     load_dotenv()
