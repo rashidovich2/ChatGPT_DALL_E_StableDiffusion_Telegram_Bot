@@ -23,8 +23,7 @@ from telegram.ext import (
     ConversationHandler,
     MessageHandler,
     filters,
-    CallbackQueryHandler,
-    RequestHandler
+    CallbackQueryHandler
     )
 
 (ENTRY_STATE, CHATGPT_STATE,
@@ -558,7 +557,6 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    application.add_handler(RequestHandler(handle))
     PORT=int(os.environ.get('PORT', '8443'))
     application.run_webhook(
         listen="0.0.0.0",
