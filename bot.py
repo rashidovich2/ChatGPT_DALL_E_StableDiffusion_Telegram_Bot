@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from aiocryptopay import AioCryptoPay, Networks
 
 from telegram import (
-    Bot,
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     ReplyKeyboardMarkup,
