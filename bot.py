@@ -1,7 +1,6 @@
 from deep_translator import GoogleTranslator
   
 import os
-import asyncio
 import psycopg2
 from chatgpt import Chatgpt
 from stablediffusion import StableDiffusion
@@ -10,7 +9,6 @@ from dotenv import load_dotenv
 from aiocryptopay import AioCryptoPay, Networks
 from flask import Flask, request, abort
 from threading import Thread
-app = Flask(__name__)
 
 from telegram import (
     InlineKeyboardMarkup,
@@ -480,7 +478,8 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-class FlaskThread(Thread):
+def runFlask():
+    app = Flask(__name__)
     @app.route('/' + os.getenv("URL_PATH"))
     def webhook(self):
         if request.method == 'GET':
@@ -489,9 +488,9 @@ class FlaskThread(Thread):
             data = request.form
         else:
             abort(405)
-    def run(self) -> None:
-        PORT = int(os.environ.get('PORT', '8443'))
-        app.run(host='0.0.0.0', port=PORT, debug=True)
+    PORT = int(os.environ.get('PORT', '8443'))
+    app.run(host='0.0.0.0', port=PORT, debug=True)
+
 
 if __name__ == '__main__':
     load_dotenv()
@@ -568,6 +567,6 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    flask_thread = FlaskThread()
-    flask_thread.start()
+    t1 = Thread(target = runFlask)
+    t1.start()
     application.run_polling()
