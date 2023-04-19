@@ -490,8 +490,8 @@ if __name__ == '__main__':
     db_object = db_connection.cursor()
     application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).read_timeout(100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
-    app.threading = True
-    app.run(debug=True, port=os.getenv("WEBHOOK_PORT"))
+    from waitress import serve
+    serve(app,host="0.0.0.0",port=os.getenv("WEBHOOK_PORT"))
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start),MessageHandler(filters.Regex('^🔙Back$'), start)],
         states={
