@@ -498,6 +498,7 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 #         else:
 #             print(cherrypy.request)
 #             raise cherrypy.HTTPError(403)
+app = flask.Flask(__name__)
 @app.route('/', methods=['POST', 'GET'])
 def process_request():
     fk_ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
@@ -596,7 +597,6 @@ if __name__ == '__main__':
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
-    app = flask.Flask(__name__)
     app.threading = True
     app.run(host=os.getenv("WEBHOOK_HOST"))
     # WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
