@@ -501,6 +501,7 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 @app.route('/')
 def index():
   return "Webhook received!"
+
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
