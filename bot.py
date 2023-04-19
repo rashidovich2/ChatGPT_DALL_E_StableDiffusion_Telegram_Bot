@@ -507,6 +507,7 @@ if __name__ == '__main__':
     db_object = db_connection.cursor()
     application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).read_timeout(100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
+    app.run(debug=True, port=5000)
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start),MessageHandler(filters.Regex('^🔙Back$'), start)],
         states={
@@ -575,5 +576,3 @@ if __name__ == '__main__':
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
-    time.sleep(5)
-    app.run(debug=True,port=443)
