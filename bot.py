@@ -3,6 +3,7 @@ from deep_translator import GoogleTranslator
 import os
 from flask import Flask, request, abort, render_template
 app = Flask(__name__)
+from threading import Thread
 import time
 import psycopg2
 from chatgpt import Chatgpt
@@ -490,8 +491,7 @@ if __name__ == '__main__':
     db_object = db_connection.cursor()
     application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).read_timeout(100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
-    app.threading=True
-    app.run(port=os.getenv("WEBHOOK_PORT"))
+    Thread(app.run(port=os.getenv("WEBHOOK_PORT")))
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start),MessageHandler(filters.Regex('^🔙Back$'), start)],
         states={
