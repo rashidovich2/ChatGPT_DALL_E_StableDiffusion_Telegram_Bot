@@ -26,8 +26,8 @@ from telegram.ext import (
     CallbackQueryHandler
     )
 
-from telegram.utils.request import Request
-from telegram.utils.webhookhandler import WebhookHandler
+from telegram.request import Request
+from telegram.webhookhandler import WebhookHandler
 
 (ENTRY_STATE, CHATGPT_STATE,
 DALL_E_STATE, STABLE_STATE, 
