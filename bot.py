@@ -7,7 +7,7 @@ from stablediffusion import StableDiffusion
 from dalle import DallE
 from dotenv import load_dotenv
 from aiocryptopay import AioCryptoPay, Networks
-from Flask import Flask
+from flask import Flask
 app = Flask(__name__)
 
 from telegram import (
