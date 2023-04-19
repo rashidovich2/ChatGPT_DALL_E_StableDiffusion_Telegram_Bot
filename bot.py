@@ -484,7 +484,7 @@ async def main():
     db_object = db_connection.cursor()
     context_types = ContextTypes(context=CustomContext)
     application = (
-        Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).updater(None).context_types(context_types).build()
+        Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).updater(None).context_types(None).build()
     )
     #application = Application.builder().token().read_timeout(100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
