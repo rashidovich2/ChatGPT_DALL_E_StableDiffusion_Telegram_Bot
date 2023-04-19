@@ -8,7 +8,7 @@ from stablediffusion import StableDiffusion
 from dalle import DallE
 from dotenv import load_dotenv
 from aiocryptopay import AioCryptoPay, Networks
-from flask import Flask, request
+from flask import Flask, request, abort
 app = Flask(__name__)
 
 from telegram import (
@@ -481,7 +481,12 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 
 @app.route('/'+os.getenv("URL_PATH"))
 def webhook():
-    return "Webhook received!"
+    if request.method == 'GET':
+        return "Webhook received!"
+    elif request.method == 'POST':
+        print("Data received from Webhook is: ", request.json)
+    else:
+        abort(405)
 
 async def main():
     load_dotenv()
