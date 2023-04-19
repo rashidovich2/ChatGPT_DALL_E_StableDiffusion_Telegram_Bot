@@ -499,16 +499,20 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 #             print(cherrypy.request)
 #             raise cherrypy.HTTPError(403)
 app = Flask(__name__)
-@app.route('/webhook', methods=['POST', 'GET'])
-def process_request():
-    fk_ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
-    if request.access_route[0] not in fk_ips:
-        print("Data received from Webhook is: ", request.json)
-        abort(403)
-    else:
-        if request.method == 'POST':
-            print("Data received from Webhook is: ", request.json)
-            return "Webhook received!"
+@app.route('/')
+def index():
+  return "Webhook received!"
+# @app.route('/webhook', methods=['POST', 'GET'])
+# def process_request():
+#     fk_ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
+#     if request.access_route[0] not in fk_ips:
+#         print("Data received from Webhook is: ", request.json)
+#         abort(403)
+#     else:
+#         if request.method == 'POST':
+#             print("Data received from Webhook is: ", request.json)
+#             return "Webhook received!"
+
     # user_id = db.get_user_by_pay_sign(flask.request.values['SIGN'])
     # if user_id is None:
     #     flask.abort(422)
@@ -601,7 +605,7 @@ if __name__ == '__main__':
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
     time.sleep(5)
-    app.threading = True
+    # app.threading = True
     app.run(port=443)
     # WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
     # WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
