@@ -486,7 +486,7 @@ def runFlask():
         if request.access_route[0] not in fk_ips:
             abort(403)
         else:
-            SIGN = request.values['SIGN']
+            #SIGN = request.values['SIGN']
             pass
         return 'YES'
     PORT = int(os.environ.get('PORT', '8443'))
