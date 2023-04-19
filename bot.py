@@ -2,13 +2,13 @@ from deep_translator import GoogleTranslator
   
 import os
 from flask import Flask, request, abort
+app = Flask(__name__)
 import time
 import psycopg2
 from chatgpt import Chatgpt
 from stablediffusion import StableDiffusion
 from dalle import DallE
 from dotenv import load_dotenv
-import cherrypy
 from aiocryptopay import AioCryptoPay, Networks
 
 from telegram import (
@@ -498,38 +498,9 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 #         else:
 #             print(cherrypy.request)
 #             raise cherrypy.HTTPError(403)
-app = Flask(__name__)
 @app.route('/')
 def index():
   return "Webhook received!"
-# @app.route('/webhook', methods=['POST', 'GET'])
-# def process_request():
-#     fk_ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
-#     if request.access_route[0] not in fk_ips:
-#         print("Data received from Webhook is: ", request.json)
-#         abort(403)
-#     else:
-#         if request.method == 'POST':
-#             print("Data received from Webhook is: ", request.json)
-#             return "Webhook received!"
-
-    # user_id = db.get_user_by_pay_sign(flask.request.values['SIGN'])
-    # if user_id is None:
-    #     flask.abort(422)
-    # if db.is_first_pay(user_id):
-    #     pay_success(user_id, True)
-    #    db.set_expire(user_id, get_time() + month)
-    #   write_to_bot_2_f(id=user_id)
-    #      set_first_pay_date(db.get_at_id(user_id), bot_time.get_isoformat_date())
-    # else:
-    #     pay_success(user_id, False)
-    #     db.set_expire(user_id, db.get_expiration_time(user_id) + month)
-    #     menu_f(id=user_id)
-    #     set_pay_date(db.get_at_id(user_id), bot_time.get_isoformat_date())
-    # return 'YES'
-# def payment_handler_loop():
-#     app.threading = True
-#     app.run(host=os.getenv("WEBHOOK_HOST"))
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
@@ -605,20 +576,4 @@ if __name__ == '__main__':
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.run_polling()
     time.sleep(5)
-    # app.threading = True
     app.run(debug=True,port=443)
-    # WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
-    # WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
-    # application.run_webhook(webhook_url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
-    # bot = Bot(os.getenv("TELEGRAM_BOT_TOKEN"))
-    # bot.infinity_polling()
-
-    # bot.remove_webhook()
-    # time.sleep(5)
-    # bot.set_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
-
-    # cherrypy.config.update({
-    #     'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
-    #     'server.socket_port': os.getenv("WEBHOOK_PORT"),
-    # })
-    # cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
