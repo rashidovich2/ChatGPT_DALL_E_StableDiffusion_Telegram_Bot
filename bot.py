@@ -484,7 +484,6 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 def index():
     return render_template('index.html')
 
-
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
