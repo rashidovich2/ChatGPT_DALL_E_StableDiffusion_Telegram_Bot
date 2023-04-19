@@ -481,7 +481,7 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 
 @app.route('/'+os.getenv("URL_PATH"))
 def webhook():
-    pass
+    return "Webhook received!"
 
 async def main():
     load_dotenv()
