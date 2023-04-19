@@ -1,8 +1,6 @@
 from deep_translator import GoogleTranslator
   
 import os
-#from flask import Flask, request, abort, render_template
-#app = Flask(__name__)
 import psycopg2
 from chatgpt import Chatgpt
 from stablediffusion import StableDiffusion
@@ -479,17 +477,12 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-#@app.route('/')
-#def index():
-#    return render_template('index.html')
-
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
     db_object = db_connection.cursor()
     application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).read_timeout(100).get_updates_read_timeout(100).build()
     crypto = AioCryptoPay(token=os.getenv("CRYPTOPAY_KEY"), network=Networks.MAIN_NET)
-    #app.run(port=os.getenv("WEBHOOK_PORT"))
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start),MessageHandler(filters.Regex('^🔙Back$'), start)],
         states={
