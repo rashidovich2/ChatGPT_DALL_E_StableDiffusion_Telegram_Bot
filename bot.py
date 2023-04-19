@@ -558,5 +558,5 @@ if __name__ == '__main__':
     #    url_path=os.getenv("URL_PATH"),
     #    webhook_url = os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")
     #)
-    application.run_polling()
+    application.start()
     app.run(host='0.0.0.0', port=8443, debug=True)
