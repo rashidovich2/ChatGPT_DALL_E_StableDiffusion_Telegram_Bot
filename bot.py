@@ -7,6 +7,8 @@ from stablediffusion import StableDiffusion
 from dalle import DallE
 from dotenv import load_dotenv
 from aiocryptopay import AioCryptoPay, Networks
+from Flask import Flask
+app = Flask(__name__)
 
 from telegram import (
     InlineKeyboardMarkup,
@@ -550,9 +552,11 @@ if __name__ == '__main__':
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
     PORT=int(os.environ.get('PORT', '8443'))
-    application.run_webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        url_path=os.getenv("URL_PATH"),
-        webhook_url = os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")
-    )
+    #application.run_webhook(
+    #    listen="0.0.0.0",
+    #    port=PORT,
+    #    url_path=os.getenv("URL_PATH"),
+    #    webhook_url = os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")
+    #)
+    application.run_polling()
+    app.run(host='0.0.0.0', port=8443, debug=True)
