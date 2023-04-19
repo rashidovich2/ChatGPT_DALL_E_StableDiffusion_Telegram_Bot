@@ -480,15 +480,17 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 
 def runFlask():
     app = Flask(__name__)
-    @app.route('/' + os.getenv("URL_PATH"))
+    @app.route('/' + os.getenv("URL_PATH"), methods=['GET','POST'])
     def webhook():
-        if request.method == 'GET':
-            return "Webhook received!"
-        elif request.method == 'POST':
-            data = request.form
-            return "Webhook received!"
-        else:
-            abort(405)
+        data = request.get_json(force=True)
+        return "ok"
+        # if request.method == 'GET':
+        #     return "Webhook received!"
+        # elif request.method == 'POST':
+        #     data = request.form
+        #     return "Webhook received!"
+        # else:
+        #     abort(405)
     PORT = int(os.environ.get('PORT', '8443'))
     app.run(host='0.0.0.0', port=PORT)
 
