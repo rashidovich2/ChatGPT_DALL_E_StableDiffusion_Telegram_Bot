@@ -606,7 +606,7 @@ if __name__ == '__main__':
     application.run_polling()
     time.sleep(5)
     # app.threading = True
-    app.run(port=443)
+    app.run(debug=True,port=443)
     # WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
     # WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
     # application.run_webhook(webhook_url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
