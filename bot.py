@@ -476,8 +476,8 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-def webhook(update: Update, context: ContextTypes):
-    print("webhook")
+async def webhook(update: Update, context: ContextTypes):
+    await print("webhook")
     return "Successful"
 if __name__ == '__main__':
     load_dotenv()
