@@ -479,9 +479,9 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+#@app.route('/')
+#def index():
+#    return render_template('index.html')
 
 if __name__ == '__main__':
     load_dotenv()
