@@ -476,9 +476,6 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-async def webhook(update: Update, context: ContextTypes):
-    await print("webhook")
-    return "Successful"
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
@@ -552,7 +549,6 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    application.add_handler(MessageHandler(filters.TEXT, webhook))
     PORT=int(os.environ.get('PORT', '8443'))
     application.run_webhook(
         listen="0.0.0.0",
