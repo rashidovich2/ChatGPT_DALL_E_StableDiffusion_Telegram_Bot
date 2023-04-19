@@ -1,7 +1,7 @@
 from deep_translator import GoogleTranslator
   
 import os
-
+import flask
 import time
 import psycopg2
 from chatgpt import Chatgpt
@@ -480,25 +480,48 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-class WebhookServer(object):
-    @cherrypy.expose
-    def index(self, *args, **kwargs):
-        ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
-        if cherrypy.request.headers['Remote-Addr'] in ips:
-            print(cherrypy.request)
-        elif 'content-length' in cherrypy.request.headers and \
-                        'content-type' in cherrypy.request.headers and \
-                        cherrypy.request.headers['content-type'] == 'application/json':
-            length = int(cherrypy.request.headers['content-length'])
-            json_string = cherrypy.request.body.read(length).decode("utf-8")
-            update = application.Update.de_json(json_string)
-            application.process_new_updates([update])
-            print(cherrypy.request)
-            return ''
-        else:
-            print(cherrypy.request)
-            raise cherrypy.HTTPError(403)
-
+# class WebhookServer(object):
+#     @cherrypy.expose
+#     def index(self, *args, **kwargs):
+#         ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
+#         if cherrypy.request.headers['Remote-Addr'] in ips:
+#             print(cherrypy.request)
+#         elif 'content-length' in cherrypy.request.headers and \
+#                         'content-type' in cherrypy.request.headers and \
+#                         cherrypy.request.headers['content-type'] == 'application/json':
+#             length = int(cherrypy.request.headers['content-length'])
+#             json_string = cherrypy.request.body.read(length).decode("utf-8")
+#             update = application.Update.de_json(json_string)
+#             application.process_new_updates([update])
+#             print(cherrypy.request)
+#             return ''
+#         else:
+#             print(cherrypy.request)
+#             raise cherrypy.HTTPError(403)
+@app.route('/', methods=['POST', 'GET'])
+def process_request():
+    fk_ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
+    if flask.request.access_route[0] not in fk_ips:
+        flask.abort(403)
+    else:
+        print('5000')
+    # user_id = db.get_user_by_pay_sign(flask.request.values['SIGN'])
+    # if user_id is None:
+    #     flask.abort(422)
+    # if db.is_first_pay(user_id):
+    #     pay_success(user_id, True)
+    #    db.set_expire(user_id, get_time() + month)
+    #   write_to_bot_2_f(id=user_id)
+    #      set_first_pay_date(db.get_at_id(user_id), bot_time.get_isoformat_date())
+    # else:
+    #     pay_success(user_id, False)
+    #     db.set_expire(user_id, db.get_expiration_time(user_id) + month)
+    #     menu_f(id=user_id)
+    #     set_pay_date(db.get_at_id(user_id), bot_time.get_isoformat_date())
+    # return 'YES'
+# def payment_handler_loop():
+#     app.threading = True
+#     app.run(host=os.getenv("WEBHOOK_HOST"))
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
@@ -572,10 +595,13 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
-    WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
-    application.run_webhook(webhook_url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
     application.run_polling()
+    app = flask.Flask(__name__)
+    app.threading = True
+    app.run(host=os.getenv("WEBHOOK_HOST"))
+    # WEBHOOK_URL_BASE = "https://%s:%s" % (os.getenv("WEBHOOK_HOST"), os.getenv("WEBHOOK_PORT"))
+    # WEBHOOK_URL_PATH = "/%s/" % (os.getenv("TELEGRAM_BOT_TOKEN"))
+    # application.run_webhook(webhook_url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
     # bot = Bot(os.getenv("TELEGRAM_BOT_TOKEN"))
     # bot.infinity_polling()
 
@@ -583,8 +609,8 @@ if __name__ == '__main__':
     # time.sleep(5)
     # bot.set_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH)
 
-    cherrypy.config.update({
-        'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
-        'server.socket_port': os.getenv("WEBHOOK_PORT"),
-    })
-    cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
+    # cherrypy.config.update({
+    #     'server.socket_host': os.getenv("WEBHOOK_LISTEN"),
+    #     'server.socket_port': os.getenv("WEBHOOK_PORT"),
+    # })
+    # cherrypy.quickstart(WebhookServer(), WEBHOOK_URL_PATH, {'/': {}})
