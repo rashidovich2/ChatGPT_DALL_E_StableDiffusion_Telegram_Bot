@@ -1,7 +1,6 @@
 from deep_translator import GoogleTranslator
   
 import os
-import json
 import psycopg2
 from chatgpt import Chatgpt
 from stablediffusion import StableDiffusion
@@ -25,9 +24,6 @@ from telegram.ext import (
     filters,
     CallbackQueryHandler
     )
-
-from telegram.request import Request
-from telegram.webhookhandler import WebhookHandler
 
 (ENTRY_STATE, CHATGPT_STATE,
 DALL_E_STATE, STABLE_STATE, 
@@ -480,13 +476,6 @@ async def keyboard_callback(update: Update, context: ContextTypes):
         else:
             await query.answer("❎Payment has expired, create a new payment")
 
-def webhook(request: Request):
-    if request.method == "POST":
-        json_data = request.get_json()
-        update = Update.de_json(json_data, bot)
-        application.process_update(update)
-    return 'ok'
-
 if __name__ == '__main__':
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
@@ -560,7 +549,6 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    application.add_handler(WebhookHandler(webhook))
     PORT=int(os.environ.get('PORT', '8443'))
     application.run_webhook(
         listen="0.0.0.0",
