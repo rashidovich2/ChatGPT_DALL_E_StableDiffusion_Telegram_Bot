@@ -478,8 +478,7 @@ async def keyboard_callback(update: Update, context: ContextTypes):
                 await query.answer("❎Payment has expired, create a new payment")
         else:
             await query.answer("❎Payment has expired, create a new payment")
-
-if __name__ == '__main__':
+async def main():
     load_dotenv()
     db_connection = psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
     db_object = db_connection.cursor()
@@ -552,13 +551,10 @@ if __name__ == '__main__':
     )
     application.add_handler(conv_handler)
     application.add_handler(CallbackQueryHandler(keyboard_callback))
-    asyncio.run(application.bot.set_webhook(url=os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")))
+    await application.bot.set_webhook(url=os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH"))
     PORT=int(os.environ.get('PORT', '8443'))
-    #application.run_webhook(
-    #    listen="0.0.0.0",
-    #    port=PORT,
-    #    url_path=os.getenv("URL_PATH"),
-    #    webhook_url = os.getenv("WEBHOOK_URL")+os.getenv("URL_PATH")
-    #)
-    asyncio.run(application.start())
-    app.run(host='0.0.0.0', port=8443, debug=True)
+    await application.start())
+    app.run(host='0.0.0.0', port=PORT, debug=True)
+
+if __name__ == '__main__':
+    asyncio.run(main())
