@@ -499,7 +499,7 @@ async def keyboard_callback(update: Update, context: ContextTypes):
 #             print(cherrypy.request)
 #             raise cherrypy.HTTPError(403)
 app = flask.Flask(__name__)
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/freekassa/', methods=['POST', 'GET'])
 def process_request():
     fk_ips = ['168.119.157.136', '168.119.60.227', '138.201.88.124', '178.154.197.79']
     if flask.request.access_route[0] not in fk_ips:
