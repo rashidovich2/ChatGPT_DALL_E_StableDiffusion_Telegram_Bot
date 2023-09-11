@@ -7,9 +7,9 @@ class Chatgpt:
 
     def get_answer(self, question):
         prompt = question
-        
+
         load_dotenv()
-        
+
         openai.api_key = os.getenv("CHAT_GPT3_API_KEY")
         try:
             response = openai.Completion.create(
@@ -24,8 +24,6 @@ class Chatgpt:
 
             parsed_json = json.loads(json_string)
 
-            text = parsed_json['choices'][0]['text']
-
-            return text
+            return parsed_json['choices'][0]['text']
         except:
             return
